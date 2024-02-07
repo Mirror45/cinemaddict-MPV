@@ -13,6 +13,7 @@ export const createFilmTemplate = (films) => {
     isFavorite,
   } = filmInfo;
 
+
   const WatchListClassName = isWatchList
     ? "film-card__controls-item--active"
     : "";
