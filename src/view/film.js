@@ -1,18 +1,7 @@
 import {createElement} from '../utils.js';
 
  const createFilmTemplate = (films) => {
-  const {
-    title,
-    raiting,
-    releaseDate,
-    duration,
-    genre,
-    poster,
-    description,
-    isWatchList,
-    isWatched,
-    isFavorite,
-  } = films.filmInfo;
+  const { title, raiting, releaseDate, duration, genre, poster, description, isWatchList, isWatched, isFavorite } = films.filmInfo;
 
 
 
@@ -20,7 +9,9 @@ import {createElement} from '../utils.js';
     ? "film-card__controls-item--active"
     : "";
 
-  const WatchedClassName = isWatched ? "film-card__controls-item--active" : "";
+  const WatchedClassName = isWatched
+    ? "film-card__controls-item--active"
+    : "";
 
   const FavoriteClassName = isFavorite
     ? "film-card__controls-item--active"
