@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { getRandomInteger, getRandomArray } from "../util.js";
+import { getRandomInteger, getRandomArray } from "../utils.js";
 import { COMMENTS_INDEXES } from "./mock-const.js";
 
 const EMOTIONS = ["puke", "smile", "angry", "sleeping"];

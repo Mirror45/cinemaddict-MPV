@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomArray } from "../util.js";
+import { getRandomInteger, getRandomArray } from "../utils.js";
 import { comments } from "./comments-film.js";
 import {
   TITLES,
@@ -14,6 +14,7 @@ export const generateFilm = () => {
   const id = getRandomInteger(0, TITLES.length - 1);
   const title = TITLES[id];
   let info = {};
+
   Object.entries(FILM_INFO).filter(([key, value]) => {
     if (key === title) {
       info = value;

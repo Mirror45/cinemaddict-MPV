@@ -1,5 +1,6 @@
-export const createFilmTemplate = (films) => {
-  const { filmInfo } = films;
+import {createElement} from '../utils.js';
+
+ const createFilmTemplate = (films) => {
   const {
     title,
     raiting,
@@ -11,7 +12,8 @@ export const createFilmTemplate = (films) => {
     isWatchList,
     isWatched,
     isFavorite,
-  } = filmInfo;
+  } = films.filmInfo;
+
 
 
   const WatchListClassName = isWatchList
@@ -57,3 +59,26 @@ export const createFilmTemplate = (films) => {
   </div>
 </article>`;
 };
+
+export default class Film {
+  constructor(films) {
+    this._films = films;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmTemplate(this._films);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

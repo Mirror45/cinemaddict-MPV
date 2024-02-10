@@ -1,63 +1,62 @@
-import { render } from "./util.js";
-import { createUserProfileTemplate } from "./view/user-profile.js";
-import { createFilterTemplate } from "./view/filter.js";
-import { createSortTemplate } from "./view/sort.js";
-import { createFilmBoardTemplate } from "./view/film-board.js";
-import { createFilmListTemplate } from "./view/film-list.js";
-import { createFilmContainerTemplate } from "./view/film-container.js";
-import { createFilmTemplate } from "./view/film.js";
-import { createShowMoreButtonTemplate } from "./view/show-more-button.js";
-import { createFilmTopRatedTemplate } from "./view/film-top-rated.js";
-import { createFilmMostCommentedTemplate } from "./view/film-most-commented.js";
+import { render, RenderPosition } from "./utils.js";
+import UserProfileView from "./view/user-profile.js";
+import FilterView from "./view/filter.js";
+import SortView from "./view/sort.js";
+import FilmBoardView from "./view/film-board.js";
+import FilmListView from "./view/film-list.js";
+import FilmContainerView from "./view/film-container.js";
+import FilmView from "./view/film.js";
+import ShowMoreButtonView from "./view/show-more-button.js";
+import FilmTopRatedView from "./view/film-top-rated.js";
+import FilmMostCommentedView from "./view/film-most-commented.js";
 import { generateFilm } from "./mock/film.js";
 import { generateFilter } from "./mock/filter.js";
 
 const FILM_COUNT = 20;
 const FILM_COUNT_PER_STEP = 5;
+
 const films = Array.from({ length: FILM_COUNT }, (_) => generateFilm());
 const filters = generateFilter(films);
 
 const siteHeaderElement = document.querySelector(".header");
 const siteMainElement = document.querySelector(".main");
 
-render(siteHeaderElement, createUserProfileTemplate(), "beforeend");
-render(siteMainElement, createFilterTemplate(filters), "beforeend");
-render(siteMainElement, createSortTemplate(), "beforeend");
-render(siteMainElement, createFilmBoardTemplate(), "beforeend");
+render(siteHeaderElement, new UserProfileView().getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
 
-const filmBoardElement = document.querySelector(".films");
+const filmBoardComponent = new FilmBoardView();
+const filmListComponent = new FilmListView();
+const filmLContainerComponent = new FilmContainerView();
 
-render(filmBoardElement, createFilmListTemplate(), "beforeend");
-render(filmBoardElement, createFilmTopRatedTemplate(), "beforeend");
-render(filmBoardElement, createFilmMostCommentedTemplate(), "beforeend");
-
-const filmListElement = document.querySelector(".films-list");
-
-render(filmListElement, createFilmContainerTemplate(), "beforeend");
-
-const filmContainerElement = document.querySelector(".films-list__container");
+render(siteMainElement, filmBoardComponent.getElement(), RenderPosition.BEFOREEND);
+render(filmBoardComponent.getElement(), filmListComponent.getElement(), RenderPosition.BEFOREEND);
+render(filmListComponent.getElement(), filmLContainerComponent.getElement(), RenderPosition.BEFOREEND);
+render(filmBoardComponent.getElement(), new FilmTopRatedView().getElement(), RenderPosition.BEFOREEND);
+render(filmBoardComponent.getElement(), new FilmMostCommentedView().getElement(), RenderPosition.BEFOREEND);
 
 for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
-  render(filmContainerElement, createFilmTemplate(films[i]), "beforeend");
+  render(filmLContainerComponent.getElement(), new FilmView(films[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
 if (films.length > FILM_COUNT_PER_STEP) {
   let renderedFilmCount = FILM_COUNT_PER_STEP;
 
-  render(filmListElement, createShowMoreButtonTemplate(), "beforeend");
+  const showMoreButtonComponent = new ShowMoreButtonView();
 
-  const showMoreButton = filmListElement.querySelector('.films-list__show-more');
+  render(filmListComponent.getElement(), showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
-  showMoreButton.addEventListener('click', (evt) => {
+  showMoreButtonComponent.getElement().addEventListener('click', (evt) => {
     evt.preventDefault();
     films
       .slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => render(filmContainerElement, createFilmTemplate(film), "beforeend"));
+      .forEach((film) => render(filmLContainerComponent.getElement(), new FilmView(film).getElement(), RenderPosition.BEFOREEND));
 
       renderedFilmCount += FILM_COUNT_PER_STEP;
 
     if (renderedFilmCount >= films.length) {
-      showMoreButton.remove();
+      showMoreButtonComponent.getElement().remove();
+      showMoreButtonComponent.removeElement();
     }
   });
 }
