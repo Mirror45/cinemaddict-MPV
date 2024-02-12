@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
  const createFilmTemplate = (films) => {
   const { title, raiting, releaseDate, duration, genre, poster, description, isWatchList, isWatched, isFavorite } = films.filmInfo;
@@ -51,25 +51,25 @@ import {createElement} from '../utils.js';
 </article>`;
 };
 
-export default class Film {
+export default class Film extends AbstractView {
   constructor(films) {
+    super();
     this._films = films;
-    this._element = null;
+
+    this._popupClickHandler = this._popupClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmTemplate(this._films);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _popupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setPopupClickHandler(callback) {
+    this._callback.popupClick = callback;
+    this.getElement().addEventListener('click', this._popupClickHandler);
   }
 }

@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomArray } from "../utils.js";
+import { getRandomInteger, getRandomArray } from "../utils/common.js";
 import { comments } from "./comments-film.js";
 import {
   TITLES,
@@ -44,3 +44,4 @@ export const generateFilm = () => {
     comments: getRandomArray(comments),
   };
 };
+
