@@ -7,15 +7,16 @@ import ShowMoreButtonView from "../view/show-more-button.js";
 import FilmTopRatedView from "../view/film-top-rated.js";
 import FilmMostCommentedView from "../view/film-most-commented.js";
 import FilmPresenter from './film.js';
+import {updateItem} from '../utils/common.js';
 import { render, RenderPosition, remove } from "../utils/render.js";
 
 const FILM_COUNT_PER_STEP = 5;
-
 
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
+    this._filmPresenter = {};
 
     this._filmBoardComponent = new FilmBoardView();
     this._filmListComponent = new FilmListView();
@@ -26,6 +27,7 @@ export default class Board {
     this._filmListEmptyComponent = new FilmListEmpty();
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
+    this._changeData1 = this._changeData1.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
@@ -41,13 +43,20 @@ export default class Board {
     this._renderBoard();
   }
 
+  _changeData1(updatedFilm) {
+    this._boardFilms = updateItem(this._boardFilms, updatedFilm);
+    this._filmPresenter[updatedFilm.id].init(updatedFilm);
+    console.log(updatedFilm);
+  }
+
   _renderSort() {
     render(this._filmBoardComponent, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmContainerComponent);
+    const filmPresenter = new FilmPresenter(this._filmContainerComponent, this._changeData1);
     filmPresenter.init(film);
+    this._filmPresenter[film.id] = filmPresenter;
   }
 
   _renderFilms(from, to) {
@@ -81,6 +90,15 @@ export default class Board {
 
   _renderFilmListEmpty() {
       render(this._filmBoardComponent, this._filmListEmptyComponent, RenderPosition.AFTERBEGIN);
+  }
+
+  _clearTaskList() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
+    this._renderedFilmCount = FILM_COUNT_PER_STEP;
+    remove(this._showMoreButtonComponent);
   }
 
   _renderBoard() {

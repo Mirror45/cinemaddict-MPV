@@ -11,6 +11,8 @@ const FILM_COUNT = 20;
 const films = Array.from({ length: FILM_COUNT }, (_) => generateFilm());
 const filters = generateFilter(films);
 
+console.log(films);
+
 const siteHeaderElement = document.querySelector(".header");
 const siteMainElement = document.querySelector(".main");
 

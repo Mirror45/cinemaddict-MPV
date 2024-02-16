@@ -1,18 +1,10 @@
 import { getRandomInteger, getRandomArray } from "../utils/common.js";
+import {nanoid} from 'nanoid';
 import { comments } from "./comments-film.js";
-import {
-  TITLES,
-  AGE_RATINGS,
-  GENRES,
-  COUNTRIES,
-  DESCRIPTIONS,
-  RELEASE_DATE,
-  FILM_INFO,
-} from "./mock-const";
+import { TITLES, AGE_RATINGS, GENRES, COUNTRIES, DESCRIPTIONS, RELEASE_DATE, FILM_INFO } from "./mock-const";
 
 export const generateFilm = () => {
-  const id = getRandomInteger(0, TITLES.length - 1);
-  const title = TITLES[id];
+  const title = getRandomArray(TITLES);
   let info = {};
 
   Object.entries(FILM_INFO).filter(([key, value]) => {
@@ -22,7 +14,7 @@ export const generateFilm = () => {
   });
 
   return {
-    id,
+    id: nanoid(),
     filmInfo: {
       title,
       alternativeTitle: info.alternativeTitle,
@@ -37,10 +29,10 @@ export const generateFilm = () => {
       duration: getRandomInteger(60, 150),
       country: getRandomArray(COUNTRIES),
       description: getRandomArray(DESCRIPTIONS),
-      isWatchList: Boolean(getRandomInteger(0, 1)),
-      isWatched: Boolean(getRandomInteger(0, 1)),
-      isFavorite: Boolean(getRandomInteger(0, 1)),
     },
+    isWatchList: Boolean(getRandomInteger(0, 1)),
+    isWatched: Boolean(getRandomInteger(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
     comments: getRandomArray(comments),
   };
 };
