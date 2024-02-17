@@ -2,13 +2,20 @@ import FilmView from "../view/film.js";
 import FilmDetailsView from "../view/film-details.js";
 import { render, RenderPosition, replace, remove } from "../utils/render.js";
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  FILM_DETAILS: 'FILM DETAILS',
+};
+
 export default class Task {
-  constructor(filmListContainer, changeData) {
+  constructor(filmListContainer, changeData, changeMode) {
     this._filmListContainer = filmListContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._filmComponent = null;
     this._filmDetailsComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._handleFilmClick = this._handleFilmClick.bind(this);
     this._handleRemove = this._handleRemove.bind(this);
@@ -38,13 +45,11 @@ export default class Task {
       return;
     }
 
-    // Проверка на наличие в DOM необходима,
-    // чтобы не пытаться заменить то, что не было отрисовано
-    if (this._filmListContainer.getElement().contains(prevFilmComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._filmComponent, prevFilmComponent);
     }
 
-    if (this._filmListContainer.getElement().contains(prevFilmDetailsComponent.getElement())) {
+    if (this._mode === Mode.FILM_DETAILS) {
       replace(this._filmDetailsComponent, prevFilmDetailsComponent);
     }
 
@@ -57,21 +62,31 @@ export default class Task {
     remove(this._filmDetailsComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._removePopup();
+    }
+  }
+
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       remove(this._filmDetailsComponent);
       document.removeEventListener('keydown', this._escKeyDownHandler);
+      this._mode = Mode.DEFAULT;
     }
   }
 
   _setPopup() {
       render(this._filmListContainer, this._filmDetailsComponent, RenderPosition.BEFOREEND);
       document.addEventListener('keydown', this._escKeyDownHandler);
+      this._changeMode();
+      this._mode = Mode.FILM_DETAILS;
   }
 
   _removePopup() {
       remove(this._filmDetailsComponent);
       document.removeEventListener('keydown', this._escKeyDownHandler);
+      this._mode = Mode.DEFAULT;
   }
 
   _handleFilmClick() {

@@ -27,7 +27,8 @@ export default class Board {
     this._filmListEmptyComponent = new FilmListEmpty();
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
-    this._changeData1 = this._changeData1.bind(this);
+    this._changeData = this._changeData.bind(this);
+    this._changeMode = this._changeMode.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
@@ -43,10 +44,15 @@ export default class Board {
     this._renderBoard();
   }
 
-  _changeData1(updatedFilm) {
+  _changeData(updatedFilm) {
     this._boardFilms = updateItem(this._boardFilms, updatedFilm);
     this._filmPresenter[updatedFilm.id].init(updatedFilm);
-    console.log(updatedFilm);
+  }
+
+  _changeMode() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _renderSort() {
@@ -54,7 +60,7 @@ export default class Board {
   }
 
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmContainerComponent, this._changeData1);
+    const filmPresenter = new FilmPresenter(this._filmContainerComponent, this._changeData, this._changeMode);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
