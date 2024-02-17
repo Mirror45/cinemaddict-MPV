@@ -37,12 +37,12 @@ const DESCRIPTIONS = [
 ];
 
 const RELEASE_DATE = [
-  "15 April 2015",
-  "06 December 2023",
-  "19 February 2018",
-  "28 June 2002",
-  "21 March 1945",
-  "23 May 2022",
+  "2015",
+  "2023",
+  "2018",
+  "2002",
+  "1945",
+  "2022",
 ];
 
 const FILM_INFO = {

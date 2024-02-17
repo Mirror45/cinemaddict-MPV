@@ -1,7 +1,7 @@
 import AbstractView from './abstract.js';
 
 const createFilmDetailsTemplate = (films) => {
-  const { title, alternativeTitle, poster, raiting, ageRating, director, writers, actors, genre, releaseDate, duration, country,description} = films.filmInfo;
+  const { title, alternativeTitle, poster, raiting, ageRating, director, writers, actors, genre, releaseDate, duration, country,description} = films;
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">

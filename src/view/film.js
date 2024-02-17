@@ -1,8 +1,7 @@
 import AbstractView from './abstract.js';
 
  const createFilmTemplate = (films) => {
-  const {isWatchList, isWatched, isFavorite} = films
-  const { title, raiting, releaseDate, duration, genre, poster, description} = films.filmInfo;
+  const { title, raiting, releaseDate, duration, genre, poster, description, isWatchList, isWatched, isFavorite} = films;
 
 
 
