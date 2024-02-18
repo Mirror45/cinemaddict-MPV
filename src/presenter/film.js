@@ -1,6 +1,7 @@
 import FilmView from "../view/film.js";
 import FilmDetailsView from "../view/film-details.js";
 import { render, RenderPosition, replace, remove } from "../utils/render.js";
+import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -99,6 +100,8 @@ export default class Task {
 
   _handleWatchlistClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._filmData,
@@ -111,6 +114,8 @@ export default class Task {
 
   _handleWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._filmData,
@@ -123,6 +128,8 @@ export default class Task {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._filmData,
