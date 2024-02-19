@@ -8,17 +8,20 @@ import FilmTopRatedView from "../view/film-top-rated.js";
 import FilmMostCommentedView from "../view/film-most-commented.js";
 import FilmPresenter from './film.js';
 import { render, RenderPosition, remove } from "../utils/render.js";
+import {filter} from '../utils/filter.js';
 import {sortByDate, sortByRaiting} from '../utils/sort.js';
 import {SortType, UpdateType, UserAction} from '../const.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
 export default class Board {
-  constructor(boardContainer, filmsModel) {
+  constructor(boardContainer, filmsModel, filterModel) {
     this._filmsModel = filmsModel;
+    this._filterModel = filterModel;
     this._boardContainer = boardContainer;
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._filmPresenter = {};
+    this._currentSortType = SortType.DEFAULT;
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -37,10 +40,10 @@ export default class Board {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
-
     render(this._boardContainer, this._filmBoardComponent, RenderPosition.BEFOREEND);
     render(this._filmBoardComponent, this._filmListComponent, RenderPosition.BEFOREEND);
     render(this._filmListComponent, this._filmContainerComponent, RenderPosition.BEFOREEND);
@@ -51,14 +54,17 @@ export default class Board {
   }
 
   _getFilms() {
+    const filterType = this._filterModel.getFilter();
+    const films = this._filmsModel.getFilms();
+    const filtredFilms = filter[filterType](films);
     switch (this._currentSortType) {
       case SortType.DATE:
-        return this._filmsModel.getFilms().slice().sort(sortByDate);
+        return filtredFilms.sort(sortByDate);
       case SortType.RATING:
-        return this._filmsModel.getFilms().slice().sort(sortByRaiting);
+        return filtredFilms.sort(sortByRaiting);
     }
 
-    return this._filmsModel.getFilms();
+    return filtredFilms;
   }
 
   _handleViewAction(actionType, updateType, update) {
@@ -101,6 +107,7 @@ export default class Board {
         break;
     }
   }
+
 
   _changeMode() {
     Object
@@ -206,6 +213,7 @@ export default class Board {
     if (filmCount > this._renderedFilmCount) {
       this._rendershowMoreButton();
     }
+
   }
 }
 
