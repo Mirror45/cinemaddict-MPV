@@ -102,13 +102,13 @@ export default class Task {
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
-      Object.assign(
-        {},
-        this._filmData,
-        {
-          isWatchList: !this._filmData.isWatchList,
-        },
-      ),
+      {
+        ...this._filmData,
+        user_details: {
+          ...this._filmData.user_details,
+          watchlist: !this._filmData.user_details.watchlist,
+        }
+      },
     );
   }
 
@@ -116,13 +116,13 @@ export default class Task {
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
-      Object.assign(
-        {},
-        this._filmData,
-        {
-          isWatched: !this._filmData.isWatched,
-        },
-      ),
+      {
+        ...this._filmData,
+        user_details: {
+          ...this._filmData.user_details,
+          already_watched: !this._filmData.user_details.already_watched,
+        }
+      },
     );
   }
 
@@ -130,13 +130,13 @@ export default class Task {
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.MINOR,
-      Object.assign(
-        {},
-        this._filmData,
-        {
-          isFavorite: !this._filmData.isFavorite,
-        },
-      ),
+      {
+        ...this._filmData,
+        user_details: {
+          ...this._filmData.user_details,
+          favorite: !this._filmData.user_details.favorite,
+        }
+      },
     );
   }
 }

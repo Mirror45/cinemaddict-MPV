@@ -1,52 +1,41 @@
 import AbstractView from './abstract.js';
+import { humanizeReleaseDate, convertTimeFormat} from '../utils/film.js';
 
- const createFilmTemplate = (films) => {
-  const { title, raiting, releaseDate, duration, genre, poster, description, isWatchList, isWatched, isFavorite} = films;
+ const createFilmTemplate = (movies) => {
+  const { title, total_rating, poster, release, genre, description, duration} = movies.film_info;
+  const { watchlist, already_watched, favorite} = movies.user_details;
 
+  const releaseYear = humanizeReleaseDate(release.date).slice(-4);
+  const filmDuration = convertTimeFormat(duration);
+  const filmDescription = description.length > 140 ? `${description.slice(0, 139)}...` : description;
 
-
-  const WatchListClassName = isWatchList
+  const WatchListClassName = watchlist
     ? "film-card__controls-item--add-to-watchlist film-card__controls-item--active"
     : "film-card__controls-item--add-to-watchlist";
 
-  const WatchedClassName = isWatched
+  const WatchedClassName = already_watched
     ? "film-card__controls-item--mark-as-watched film-card__controls-item--active"
     : "film-card__controls-item--mark-as-watched";
 
-  const FavoriteClassName = isFavorite
+  const FavoriteClassName = favorite
     ? "film-card__controls-item--favorite film-card__controls-item--active"
     : "film-card__controls-item--favorite";
 
   return `<article class="film-card">
   <h3 class="film-card__title">${title}</h3>
-  <p class="film-card__rating">${raiting}</p>
+  <p class="film-card__rating">${total_rating}</p>
   <p class="film-card__info">
-    <span class="film-card__year">${releaseDate}</span>
-    <span class="film-card__duration">${duration}m</span>
-    <span class="film-card__genre">${genre}</span>
+    <span class="film-card__year">${releaseYear}</span>
+    <span class="film-card__duration">${filmDuration}</span>
+    <span class="film-card__genre">${genre[0]}</span>
   </p>
-  <img src="./images/posters/${poster}" alt="" class="film-card__poster"/>
-  <p class="film-card__description">${description}</p>
-  <a class="film-card__comments">5 comments</a>
+  <img src="${poster}" alt="" class="film-card__poster"/>
+  <p class="film-card__description">${filmDescription}</p>
+  <a class="film-card__comments">${movies.comments.length} comments</a>
   <div class="film-card__controls">
-    <button
-      class="film-card__controls-item button ${WatchListClassName}"
-      type="button"
-    >
-      Add to watchlist
-    </button>
-    <button
-      class="film-card__controls-item button ${WatchedClassName}"
-      type="button"
-    >
-      Mark as watched
-    </button>
-    <button
-      class="film-card__controls-item button ${FavoriteClassName}"
-      type="button"
-    >
-      Mark as favorite
-    </button>
+    <button class="film-card__controls-item button ${WatchListClassName}" type="button">Add to watchlist</button>
+    <button class="film-card__controls-item button ${WatchedClassName}" type="button">Mark as watched</button>
+    <button class="film-card__controls-item button ${FavoriteClassName}" type="button">Mark as favorite</button>
   </div>
 </article>`;
 };

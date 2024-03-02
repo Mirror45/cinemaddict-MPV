@@ -1,7 +1,11 @@
 import AbstractView from './abstract.js';
+import { humanizeReleaseDate, convertTimeFormat} from '../utils/film.js';
 
-const createFilmDetailsTemplate = (films) => {
-  const { title, alternativeTitle, poster, raiting, ageRating, director, writers, actors, genre, releaseDate, duration, country,description} = films;
+const createFilmDetailsTemplate = (movies) => {
+  const { title, alternative_title, poster, total_rating, age_rating, director, writers, actors, genre, release, duration, description} = movies.film_info;
+
+  const releaseYear = humanizeReleaseDate(release.date).slice(-4);
+  const filmDuration = convertTimeFormat(duration);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -11,29 +15,19 @@ const createFilmDetailsTemplate = (films) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img
-            class="film-details__poster-img"
-            src="./images/posters/${poster}"
-            alt=""
-          />
-
-          <p class="film-details__age">${ageRating}+</p>
+          <img class="film-details__poster-img" src="${poster}" alt=""/>
+          <p class="film-details__age">${age_rating}+</p>
         </div>
-
         <div class="film-details__info">
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
               <h3 class="film-details__title">${title}</h3>
-              <p class="film-details__title-original">
-              ${alternativeTitle}
-              </p>
+              <p class="film-details__title-original">${alternative_title}</p>
             </div>
-
             <div class="film-details__rating">
-              <p class="film-details__total-rating">${raiting}</p>
+              <p class="film-details__total-rating">${total_rating}</p>
             </div>
           </div>
-
           <table class="film-details__table">
             <tr class="film-details__row">
               <td class="film-details__term">Director</td>
@@ -41,27 +35,23 @@ const createFilmDetailsTemplate = (films) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Writers</td>
-              <td class="film-details__cell">
-              ${writers}
-              </td>
+              <td class="film-details__cell">${writers}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Actors</td>
-              <td class="film-details__cell">
-              ${actors}
-              </td>
+              <td class="film-details__cell">${actors}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${releaseDate}</td>
+              <td class="film-details__cell">${releaseYear}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${duration} minutes</td>
+              <td class="film-details__cell">${filmDuration}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
-              <td class="film-details__cell">${country}</td>
+              <td class="film-details__cell">${release.release_country}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
@@ -70,7 +60,6 @@ const createFilmDetailsTemplate = (films) => {
               </td>
             </tr>
           </table>
-
           <p class="film-details__film-description">${description}</p>
         </div>
       </div>

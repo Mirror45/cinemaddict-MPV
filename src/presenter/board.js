@@ -3,6 +3,7 @@ import FilmListView from "../view/film-list.js";
 import FilmContainerView from "../view/film-container.js";
 import SortView from "../view/sort.js";
 import FilmListEmpty from "../view/film-list-empty.js";
+import LoadingView from '../view/loading.js';
 import ShowMoreButtonView from "../view/show-more-button.js";
 import FilmTopRatedView from "../view/film-top-rated.js";
 import FilmMostCommentedView from "../view/film-most-commented.js";
@@ -22,6 +23,7 @@ export default class Board {
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._filmPresenter = {};
     this._currentSortType = SortType.DEFAULT;
+    this._isLoading = true;
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -32,6 +34,7 @@ export default class Board {
     this._filmTopRatedComponent = new FilmTopRatedView();
     this._filmMostCommentedComponent = new FilmMostCommentedView();
     this._filmListEmptyComponent = new FilmListEmpty();
+    this._loadingComponent = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -105,6 +108,11 @@ export default class Board {
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderBoard();
+        break;
     }
   }
 
@@ -171,6 +179,10 @@ export default class Board {
     render(this._filmListComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
+  _renderLoading() {
+    render(this._filmBoardComponent, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
+
   _renderFilmListEmpty() {
       render(this._filmBoardComponent, this._filmListEmptyComponent, RenderPosition.AFTERBEGIN);
   }
@@ -185,6 +197,7 @@ export default class Board {
 
     remove(this._sortComponent);
     remove(this._filmListEmptyComponent);
+    remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
 
     if (resetRenderedFilmCount) {
@@ -199,6 +212,11 @@ export default class Board {
   }
 
   _renderBoard() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const films = this._getFilms();
     const filmCount = films.length;
 
